@@ -1,117 +1,277 @@
 'use client'
+
+import { useState, useMemo } from 'react'
 import Link from 'next/link'
+import { TABLES, TABLE_CATEGORIES } from '@/lib/adminTableConfigs'
+import * as Icons from 'lucide-react'
 
-// 57 TABLES - HARI PATH WALATA MAP KARALA - 100% NO 404
-const TABLES = [
-  { table: 'hero_sections', slug: 'hero', name: 'Hero Sections', icon: '🎨' },
-    { table: 'announcement_bars', slug: 'announcement', name: 'Announcement Bars', icon: '📢' },
-      { table: 'products', slug: 'products', name: 'Products', icon: '🧴' },
-        { table: 'product_images', slug: 'product-images', name: 'Product Images', icon: '🖼️' },
-          { table: 'product_variants', slug: 'variants', name: 'Product Variants', icon: '🎨' },
-            { table: 'product_types', slug: 'product-types', name: 'Product Types', icon: '🏷️' },
-              { table: 'categories', slug: 'categories', name: 'Categories', icon: '📁' },
-                { table: 'collections', slug: 'collections', name: 'Collections', icon: '📦' },
-                  { table: 'collection_products', slug: 'collection-products', name: 'Collection Products', icon: '🔗' },
-                    { table: 'orders', slug: 'orders', name: 'Orders', icon: '🛒' },
-                      { table: 'order_items', slug: 'order-items', name: 'Order Items', icon: '📋' },
-                        { table: 'carts', slug: 'carts', name: 'Carts', icon: '🛍️' },
-                          { table: 'cart_items', slug: 'cart-items', name: 'Cart Items', icon: '🧺' },
-                            { table: 'wishlists', slug: 'wishlists', name: 'Wishlists', icon: '❤️' },
-                              { table: 'coupons', slug: 'coupons', name: 'Coupons', icon: '🎟️' },
-                                { table: 'payment_methods', slug: 'payments', name: 'Payment Methods', icon: '💳' },
-                                  { table: 'delivery_settings', slug: 'delivery', name: 'Delivery Settings', icon: '🚚' },
-                                    { table: 'costs', slug: 'costs', name: 'Costs', icon: '💰' },
-                                      { table: 'commissions', slug: 'commissions', name: 'Commissions', icon: '💸' },
-                                        { table: 'customers', slug: 'customers', name: 'Customers', icon: '👥' },
-                                          { table: 'customer_sessions', slug: 'customer-sessions', name: 'Customer Sessions', icon: '🔑' },
-                                            { table: 'reviews', slug: 'reviews', name: 'Reviews', icon: '⭐' },
-                                              { table: 'testimonials', slug: 'testimonials', name: 'Testimonials', icon: '💬' },
-                                                { table: 'pages', slug: 'pages', name: 'Pages', icon: '📄' },
-                                                  { table: 'page_sections', slug: 'page-sections', name: 'Page Sections', icon: '🧱' },
-                                                    { table: 'section_elements', slug: 'section-elements', name: 'Section Elements', icon: '🧩' },
-                                                      { table: 'blogs', slug: 'blogs', name: 'Blogs', icon: '✍️' },
-                                                        { table: 'faqs', slug: 'faqs', name: 'FAQs', icon: '❓' },
-                                                          { table: 'popups', slug: 'popups', name: 'Popups', icon: '💥' },
-                                                            { table: 'navigation_menus', slug: 'navigation-menus', name: 'Navigation Menus', icon: '🧭' },
-                                                              { table: 'navigation_items', slug: 'navigation-items', name: 'Navigation Items', icon: '🔗' },
-                                                                { table: 'media', slug: 'media', name: 'Media', icon: '🎞️' },
-                                                                  { table: 'media_library', slug: 'media-library', name: 'Media Library', icon: '🗃️' },
-                                                                    { table: 'global_components', slug: 'global-components', name: 'Global Components', icon: '🌐' },
-                                                                      { table: 'reusable_components', slug: 'reusable', name: 'Reusable Components', icon: '♻️' },
-                                                                        { table: 'custom_code', slug: 'custom-code', name: 'Custom Code', icon: '💻' },
-                                                                          { table: 'redirects', slug: 'redirects', name: 'Redirects', icon: '↪️' },
-                                                                            { table: 'site_settings', slug: 'site-settings', name: 'Site Settings', icon: '⚙️' },
-                                                                              { table: 'theme_settings', slug: 'theme', name: 'Theme Settings', icon: '🎨' },
-                                                                                { table: 'seo_settings', slug: 'seo', name: 'SEO Settings', icon: '🔍' },
-                                                                                  { table: 'analytics_settings', slug: 'analytics', name: 'Analytics Settings', icon: '📊' },
-                                                                                    { table: 'feature_settings', slug: 'feature-settings', name: 'Feature Settings', icon: '🚩' },
-                                                                                      { table: 'cms_settings', slug: 'cms-settings', name: 'CMS Settings', icon: '🛠️' },
-                                                                                        { table: 'maintenance_settings', slug: 'maintenance', name: 'Maintenance Settings', icon: '🚧' },
-                                                                                          { table: 'error_page_settings', slug: 'error-pages', name: 'Error Page Settings', icon: '❗' },
-                                                                                            { table: 'social_links', slug: 'social', name: 'Social Links', icon: '🌐' },
-                                                                                              { table: 'admins', slug: 'admins', name: 'Admins', icon: '👮' },
-                                                                                                { table: 'admin_sessions', slug: 'admin-sessions', name: 'Admin Sessions', icon: '🔐' },
-                                                                                                  { table: 'activity_feed', slug: 'activity', name: 'Activity Feed', icon: '📈' },
-                                                                                                    { table: 'audit_logs', slug: 'audit-logs', name: 'Audit Logs', icon: '📜' },
-                                                                                                      { table: 'cms_audit', slug: 'cms-audit', name: 'CMS Audit', icon: '🔎' },
-                                                                                                        { table: 'error_logs', slug: 'error-logs', name: 'Error Logs', icon: '🐛' },
-                                                                                                          { table: 'content_revisions', slug: 'revisions', name: 'Content Revisions', icon: '🕘' },
-                                                                                                            { table: 'bot_conversations', slug: 'bot-conversations', name: 'Bot Conversations', icon: '🤖' },
-                                                                                                              { table: 'bot_knowledge', slug: 'bot-knowledge', name: 'Bot Knowledge', icon: '🧠' },
-                                                                                                                { table: 'bot_messages', slug: 'bot-messages', name: 'Bot Messages', icon: '💬' },
-                                                                                                                  { table: 'bot_settings', slug: 'bot-settings', name: 'Bot Settings', icon: '⚙️' },
-                                                                                                                  ]
+// Known tables with active data reported by user
+const TABLES_WITH_DATA = new Set([
+  'products',
+  'product_images',
+  'product_variants',
+  'categories',
+  'delivery_settings',
+  'customers',
+  'payment_methods',
+  'orders',
+  'pages',
+  'collections',
+  'navigation_menus',
+  'site_settings',
+  'product_types',
+  'admins',
+  'coupons'
+])
 
-                                                                                                                  export default function DashboardPage() {
-                                                                                                                    return (
-                                                                                                                        <div className="min-h-screen bg-[#050505] text-white p-6 md:p-8">
-                                                                                                                              <div className="max-w-7xl mx-auto">
-                                                                                                                                      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-8">
-                                                                                                                                                <div>
-                                                                                                                                                            <h1 className="text-3xl font-black tracking-tight">AROMA ADMIN</h1>
-                                                                                                                                                                        <p className="text-xs text-gray-500 mt-1 font-mono">57 TABLES • All paths fixed • Hero: /admin/dashboard/hero → hero_sections table • No 404</p>
-                                                                                                                                                                                  </div>
-                                                                                                                                                                                            <div className="flex gap-2">
-                                                                                                                                                                                                        <span className="px-4 py-2 bg-green-900/30 border border-green-800 text-green-300 rounded-full text-[11px] font-bold">{TABLES.length} TABLES ACTIVE</span>
-                                                                                                                                                                                                                    <Link href="/" className="px-5 py-2 bg-white text-black rounded-full text-xs font-bold hover:bg-gray-200">Customer Home →</Link>
-                                                                                                                                                                                                                              </div>
-                                                                                                                                                                                                                                      </div>
+export default function AdminDashboardPage() {
+  const [search, setSearch] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('ALL')
 
-                                                                                                                                                                                                                                              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                                                                                                                                                                                                                                                        {TABLES.map((item) => (
-                                                                                                                                                                                                                                                                    <Link
-                                                                                                                                                                                                                                                                                  key={item.slug}
-                                                                                                                                                                                                                                                                                                href={`/admin/dashboard/${item.slug}`}
-                                                                                                                                                                                                                                                                                                              className="group bg-[#111] border border-gray-800 rounded-2xl p-4 hover:bg-[#181818] hover:border-gray-700 transition-all duration-200 hover:scale-[1.02]"
-                                                                                                                                                                                                                                                                                                                          >
-                                                                                                                                                                                                                                                                                                                                        <div className="flex justify-between items-start">
-                                                                                                                                                                                                                                                                                                                                                        <div className="text-xl group-hover:scale-110 transition-transform">{item.icon}</div>
-                                                                                                                                                                                                                                                                                                                                                                        <div className="text-[8px] font-mono bg-black border border-gray-800 px-2 py-1 rounded-full text-gray-500 group-hover:text-green-400">/{item.slug}</div>
-                                                                                                                                                                                                                                                                                                                                                                                      </div>
-                                                                                                                                                                                                                                                                                                                                                                                                    <div className="font-bold text-xs mt-3 leading-tight">{item.name}</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                  <div className="text-[9px] text-gray-600 mt-1 font-mono truncate">{item.table}</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                <div className="mt-3 h-1 w-full bg-gray-900 rounded-full overflow-hidden">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                <div className="h-full w-2/3 bg-white/20 group-hover:bg-white/40 transition"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                              </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                          </Link>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ))}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
+  const categories = useMemo(() => {
+    return ['ALL', ...Object.values(TABLE_CATEGORIES)]
+  }, [])
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div className="mt-8 grid md:grid-cols-3 gap-3">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <div className="bg-[#111] border border-gray-800 rounded-xl p-4">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          <p className="text-xs font-bold text-green-400">✅ HERO FIXED</p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <p className="text-[11px] text-gray-500 mt-1">Button: /admin/dashboard/hero → table: hero_sections → no 404, full customize form</p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          <div className="bg-[#111] border border-gray-800 rounded-xl p-4">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <p className="text-xs font-bold">📁 FOLDER STRUCTURE</p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  <p className="text-[11px] text-gray-500 mt-1 font-mono">app/admin/dashboard/[slug]/page.js - 57 folders</p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <div className="bg-[#111] border border-gray-800 rounded-xl p-4">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  <p className="text-xs font-bold">🚀 AFTER REPLACE</p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <p className="text-[11px] text-gray-500 mt-1">rm -rf .next → npm run dev → test hero button</p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            )
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
+  const filteredTables = useMemo(() => {
+    return TABLES.filter((t) => {
+      const matchesCategory = selectedCategory === 'ALL' || t.category === selectedCategory
+      const matchesSearch =
+        !search.trim() ||
+        t.name.toLowerCase().includes(search.toLowerCase()) ||
+        t.table.toLowerCase().includes(search.toLowerCase()) ||
+        t.slug.toLowerCase().includes(search.toLowerCase()) ||
+        t.description.toLowerCase().includes(search.toLowerCase())
+      return matchesCategory && matchesSearch
+    })
+  }, [search, selectedCategory])
+
+  const stats = useMemo(() => {
+    const total = TABLES.length
+    const withData = TABLES.filter(t => TABLES_WITH_DATA.has(t.table)).length
+    const empty = total - withData
+    return { total, withData, empty }
+  }, [])
+
+  return (
+    <div className="min-h-screen bg-[#050505] text-neutral-100 font-sans pb-24">
+      {/* TOP HEADER */}
+      <header className="border-b border-neutral-800 bg-[#090909]/90 backdrop-blur sticky top-0 z-30 px-6 py-4">
+        <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-700 flex items-center justify-center text-black font-black text-xl shadow-lg shadow-amber-500/10">
+              A
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-xl font-black tracking-tight text-white">AROMA ADMIN CONTROL</h1>
+                <span className="text-[10px] bg-emerald-950/80 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded-full font-mono font-bold">
+                  57 TABLES LIVE
+                </span>
+              </div>
+              <p className="text-xs text-neutral-400">
+                Full-customization suite for all Supabase database tables & site settings
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Link
+              href="/admin/dashboard/customizer"
+              className="px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-bold text-xs rounded-xl transition flex items-center gap-2 shadow-lg shadow-amber-400/20"
+            >
+              <Icons.Sliders className="w-4 h-4 text-black" />
+              <span>Theme Customizer (No-Code)</span>
+            </Link>
+
+            <Link
+              href="/"
+              target="_blank"
+              className="px-4 py-2 bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-xs font-semibold text-neutral-200 rounded-xl transition flex items-center gap-1.5"
+            >
+              <Icons.ExternalLink className="w-3.5 h-3.5 text-neutral-400" />
+              <span>Live Store</span>
+            </Link>
+
+            <Link
+              href="/admin/login"
+              className="px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-neutral-300 text-xs font-bold rounded-xl border border-neutral-800 transition"
+            >
+              Sign In
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* DASHBOARD HERO BANNER */}
+      <main className="max-w-7xl mx-auto px-6 pt-8">
+        <div className="bg-gradient-to-b from-[#111] to-[#0a0a0a] border border-neutral-800 rounded-3xl p-6 md:p-8 mb-8 relative overflow-hidden shadow-2xl">
+          <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div>
+              <span className="text-xs font-mono tracking-widest text-amber-400 uppercase font-bold">
+                Luxury Fragrance CMS Engine
+              </span>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight mt-1">
+                Universal Database Manager
+              </h2>
+              <p className="text-sm text-neutral-400 mt-2 max-w-xl leading-relaxed">
+                Seamlessly read, add, update, duplicate, and delete records across all 57 database tables.
+                Supports custom columns, automatic schema detection, and raw JSON payload editing.
+              </p>
+            </div>
+
+            {/* QUICK STATS */}
+            <div className="grid grid-cols-3 gap-3 w-full md:w-auto">
+              <div className="bg-[#181818] border border-neutral-800 rounded-2xl p-4 text-center min-w-[100px]">
+                <p className="text-[10px] text-neutral-500 font-mono uppercase">Total Tables</p>
+                <p className="text-2xl font-black text-white mt-1">{stats.total}</p>
+              </div>
+              <div className="bg-[#181818] border border-emerald-900/40 rounded-2xl p-4 text-center min-w-[100px]">
+                <p className="text-[10px] text-emerald-400 font-mono uppercase">Has Data</p>
+                <p className="text-2xl font-black text-emerald-400 mt-1">{stats.withData}</p>
+              </div>
+              <div className="bg-[#181818] border border-neutral-800 rounded-2xl p-4 text-center min-w-[100px]">
+                <p className="text-[10px] text-neutral-500 font-mono uppercase">Empty / Ready</p>
+                <p className="text-2xl font-black text-neutral-400 mt-1">{stats.empty}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* SHOPIFY THEME CUSTOMIZER SPOTLIGHT CARD */}
+          <div className="mt-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/30 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-amber-400 text-black flex items-center justify-center shrink-0">
+                <Icons.Sliders className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                  <span>Shopify-Style Visual Theme Customizer</span>
+                  <span className="text-[9px] bg-amber-400 text-black px-2 py-0.5 rounded-full font-mono font-bold">NO CODE REQUIRED</span>
+                </h3>
+                <p className="text-xs text-neutral-400 mt-0.5">
+                  Edit Hero slides, announcement bar, scent quiz questions, story, reviews, and branding with live desktop/mobile preview.
+                </p>
+              </div>
+            </div>
+
+            <Link
+              href="/admin/dashboard/customizer"
+              className="px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-black font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-lg shrink-0 flex items-center gap-1.5"
+            >
+              <span>Open Theme Customizer</span>
+              <Icons.ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          {/* SEARCH & CATEGORY FILTER BAR */}
+          <div className="mt-8 pt-6 border-t border-neutral-800/80 flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
+            <div className="relative flex-1 max-w-md">
+              <Icons.Search className="w-4 h-4 text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search tables by name, slug, or table identifier..."
+                className="w-full bg-[#161616] border border-neutral-800 rounded-xl pl-9 pr-4 py-2.5 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-amber-400 transition"
+              />
+              {search && (
+                <button
+                  onClick={() => setSearch('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white"
+                >
+                  <Icons.X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+
+            {/* CATEGORY TABS */}
+            <div className="flex gap-1.5 overflow-x-auto pb-2 md:pb-0 scrollbar-none">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-3 py-1.5 rounded-xl text-xs whitespace-nowrap transition font-medium ${
+                    selectedCategory === cat
+                      ? 'bg-white text-black shadow'
+                      : 'bg-[#181818] text-neutral-400 hover:text-white hover:bg-neutral-800 border border-neutral-800'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* 57 TABLES GRID */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {filteredTables.map((item) => {
+            const Icon = Icons[item.icon] || Icons.Database
+            const hasData = TABLES_WITH_DATA.has(item.table)
+
+            return (
+              <Link
+                key={item.slug}
+                href={`/admin/dashboard/${item.slug}`}
+                className="group bg-[#111] border border-neutral-800/80 hover:border-amber-500/50 rounded-2xl p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-black flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex justify-between items-start gap-2">
+                    <div className="w-10 h-10 rounded-xl bg-neutral-900 border border-neutral-800 flex items-center justify-center text-amber-400 group-hover:scale-110 group-hover:border-amber-500/30 transition-transform">
+                      <Icon className="w-5 h-5" />
+                    </div>
+
+                    <div className="flex flex-col items-end gap-1">
+                      <span className="text-[9px] font-mono bg-neutral-900 border border-neutral-800 px-2 py-0.5 rounded-full text-neutral-400 group-hover:text-amber-300">
+                        /{item.slug}
+                      </span>
+                      {hasData ? (
+                        <span className="text-[9px] font-bold text-emerald-400 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                          Data
+                        </span>
+                      ) : (
+                        <span className="text-[9px] font-mono text-neutral-600">Ready</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <h3 className="text-sm font-bold text-white mt-4 group-hover:text-amber-300 transition-colors">
+                    {item.name}
+                  </h3>
+                  <p className="text-[10px] font-mono text-neutral-500 mt-0.5 truncate">
+                    table: {item.table}
+                  </p>
+                  <p className="text-xs text-neutral-400 mt-2 line-clamp-2 leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+
+                <div className="mt-5 pt-3 border-t border-neutral-900 flex justify-between items-center text-[11px] font-medium text-neutral-400 group-hover:text-white">
+                  <span>Open Customizer</span>
+                  <Icons.ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+            )
+          })}
+        </div>
+
+        {filteredTables.length === 0 && (
+          <div className="bg-[#111] border border-neutral-800 rounded-3xl p-12 text-center my-6">
+            <Icons.Search className="w-8 h-8 text-neutral-600 mx-auto mb-3" />
+            <h4 className="text-base font-bold text-white">No tables match your search</h4>
+            <p className="text-xs text-neutral-400 mt-1">Try clearing your search query or selecting &quot;ALL&quot; category.</p>
+            <button
+              onClick={() => {
+                setSearch('')
+                setSelectedCategory('ALL')
+              }}
+              className="mt-4 px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white text-xs font-semibold rounded-xl"
+            >
+              Reset Filters
+            </button>
+          </div>
+        )}
+      </main>
+    </div>
+  )
+}

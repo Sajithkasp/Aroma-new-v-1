@@ -1,0 +1,8 @@
+{
+  "name": "Aroma Perfumes",
+  "description": "Discover your perfect scent with Aroma - premium crafted fragrances and administrative dashboard.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
